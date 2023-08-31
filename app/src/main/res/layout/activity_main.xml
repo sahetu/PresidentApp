@@ -8,84 +8,75 @@
     tools:context=".MainActivity">
 
     <RelativeLayout
-        android:background="@color/black1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:background="@color/black1" />
 
     <RelativeLayout
-        android:padding="20dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="@dimen/_20sdp">
 
         <TextView
             android:id="@+id/main_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Login"
-            android:textColor="@color/white1"
-            android:textSize="30dp"
-            android:textStyle="bold" />
+            style="@style/text_bold_30" />
 
         <TextView
             android:id="@+id/main_email_title"
+            style="@style/text_20"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/main_title"
-            android:layout_marginTop="50dp"
-            android:text="Email"
-            android:textColor="@color/white1"
-            android:textSize="20dp" />
+            android:layout_marginTop="@dimen/_50sdp"
+            android:text="Email" />
 
         <EditText
             android:id="@+id/main_email"
+            style="@style/edit_18"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/main_email_title"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/custom_border"
-            android:inputType="textEmailAddress"
-            android:padding="10dp" />
+            android:hint="ex. abc@gmail.com"
+            android:inputType="textEmailAddress" />
 
         <TextView
             android:id="@+id/main_password_title"
+            style="@style/text_20"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/main_email"
-            android:layout_marginTop="20dp"
-            android:text="Password"
-            android:textColor="@color/white1"
-            android:textSize="20dp" />
+            android:layout_marginTop="@dimen/_20sdp"
+            android:text="Password" />
 
         <EditText
             android:id="@+id/main_password"
+            style="@style/edit_18"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/main_password_title"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/custom_border"
-            android:inputType="textPassword"
-            android:padding="10dp" />
+            android:hint="Your Password"
+            android:inputType="textPassword" />
 
         <TextView
             android:id="@+id/main_forgot_password"
+            style="@style/text_20"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/main_password"
-            android:layout_marginTop="20dp"
-            android:text="Forgot Password?"
-            android:textColor="@color/white1"
-            android:textSize="20dp" />
+            android:layout_marginTop="@dimen/_20sdp"
+            android:text="Forgot Password?" />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/main_forgot_password"
-            android:layout_marginHorizontal="70dp"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/custom_button"
+            android:layout_marginHorizontal="@dimen/_70sdp"
+            android:layout_marginTop="@dimen/_30sdp"
             android:text="Login"
-            android:textColor="@color/black"
-            app:backgroundTint="@null" />
+            style="@style/button_18" />
     </RelativeLayout>
 
 </FrameLayout>
