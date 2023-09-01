@@ -70,6 +70,7 @@
             android:text="Forgot Password?" />
 
         <Button
+            android:id="@+id/main_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/main_forgot_password"
