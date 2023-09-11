@@ -1,6 +1,8 @@
 package president.app;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +16,9 @@ import com.google.android.material.snackbar.Snackbar;
 public class MainActivity extends AppCompatActivity {
 
     Button login;
+    EditText email,password;
+
+    String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         login = findViewById(R.id.main_login);
+        email = findViewById(R.id.main_email);
+        password = findViewById(R.id.main_password);
 
         //Button
         //TextView
@@ -37,15 +44,115 @@ public class MainActivity extends AppCompatActivity {
         //3. CurrentActivity.this
         //4. getApplicationContext
 
+        //Context Type For Class File
+        //1. Context
+
+        /*login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(email.getText().toString().trim().equals("")){
+                    email.setError("Email Id Required");
+                }
+                else if(!email.getText().toString().trim().matches(emailPattern)){
+                    email.setError("Valid Email Id Required");
+                }
+                else if(password.getText().toString().trim().equals("")){
+                    password.setError("Password Required");
+                }
+                else if(password.getText().toString().trim().length()<6){
+                    password.setError("Min. 6 Char Password Required");
+                }
+                else {
+                    System.out.println("Login Successfully");
+                    Log.d("PARTH", "Login Successfully");
+                    //Toast.makeText(MainActivity.this,"Login Successfully",Toast.LENGTH_LONG).show();
+                    new CommonMethod(MainActivity.this, "Login Successfully");
+                    //Snackbar.make(view,"Login Successfully",Snackbar.LENGTH_SHORT).show();
+                    new CommonMethod(view, "Login Successfully");
+                }
+            }
+        });*/
+
+        setButtonData(false);
+
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("Login Successfully");
-                Log.d("PARTH","Login Successfully");
-                Toast.makeText(MainActivity.this,"Login Successfully",Toast.LENGTH_LONG).show();
-                Snackbar.make(view,"Login Successfully",Snackbar.LENGTH_SHORT).show();
+                new CommonMethod(MainActivity.this,"Clicked Login");
             }
         });
 
+        email.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                setButtonData(false);
+                if(email.getText().toString().trim().equals("")){
+                    email.setError("Email Id Required");
+                }
+                else if(!email.getText().toString().trim().matches(emailPattern)){
+                    email.setError("Valid Email Id Required");
+                }
+                else{
+                    if(password.getText().toString().trim().equals("")) {
+                        setButtonData(false);
+                    }
+                    else{
+                        setButtonData(true);
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        password.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                setButtonData(false);
+                if(password.getText().toString().trim().equals("")){
+                    password.setError("Password Required");
+                }
+                else if(password.getText().toString().trim().length()<6){
+                    password.setError("Min. 6 Char Password Required");
+                }
+                else{
+                    if(email.getText().toString().trim().equals("")) {
+                        setButtonData(false);
+                    }
+                    else{
+                        setButtonData(true);
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+    }
+
+    private void setButtonData(boolean b) {
+        if(b){
+            login.setVisibility(View.VISIBLE);
+        }
+        else{
+            login.setVisibility(View.GONE);
+        }
+        //login.setEnabled(b);
     }
 }
