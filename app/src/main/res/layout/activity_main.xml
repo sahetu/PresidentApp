@@ -19,10 +19,10 @@
 
         <TextView
             android:id="@+id/main_title"
+            style="@style/text_bold_30"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Login"
-            style="@style/text_bold_30" />
+            android:text="Login" />
 
         <TextView
             android:id="@+id/main_email_title"
@@ -39,6 +39,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/main_email_title"
+            android:drawableLeft="@drawable/mail"
+            android:drawablePadding="@dimen/_10sdp"
             android:hint="ex. abc@gmail.com"
             android:inputType="textEmailAddress" />
 
@@ -51,33 +53,63 @@
             android:layout_marginTop="@dimen/_20sdp"
             android:text="Password" />
 
-        <EditText
-            android:id="@+id/main_password"
-            style="@style/edit_18"
+        <FrameLayout
+            android:id="@+id/main_password_frame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/main_password_title"
-            android:hint="Your Password"
-            android:inputType="textPassword" />
+            android:layout_below="@id/main_password_title">
+
+            <EditText
+                android:id="@+id/main_password"
+                style="@style/edit_18"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_lock"
+                android:drawablePadding="@dimen/_10sdp"
+                android:hint="Your Password"
+                android:inputType="textPassword" />
+
+            <ImageView
+                android:id="@+id/main_password_hide"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:padding="@dimen/_2sdp"
+                android:src="@drawable/ic_eye_hide" />
+
+            <ImageView
+                android:visibility="gone"
+                android:id="@+id/main_password_show"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:padding="@dimen/_2sdp"
+                android:src="@drawable/ic_eye_show" />
+
+        </FrameLayout>
 
         <TextView
             android:id="@+id/main_forgot_password"
             style="@style/text_20"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/main_password"
+            android:layout_below="@id/main_password_frame"
             android:layout_marginTop="@dimen/_20sdp"
             android:text="Forgot Password?" />
 
         <Button
             android:id="@+id/main_login"
+            style="@style/button_18"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/main_forgot_password"
             android:layout_marginHorizontal="@dimen/_70sdp"
             android:layout_marginTop="@dimen/_30sdp"
-            android:text="Login"
-            style="@style/button_18" />
+            android:text="Login" />
     </RelativeLayout>
 
 </FrameLayout>

@@ -1,12 +1,16 @@
 package president.app;
 
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,8 +21,11 @@ public class MainActivity extends AppCompatActivity {
 
     Button login;
     EditText email,password;
+    TextView forgotPassword;
 
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+
+    ImageView passwordHide,passwordShow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +35,30 @@ public class MainActivity extends AppCompatActivity {
         login = findViewById(R.id.main_login);
         email = findViewById(R.id.main_email);
         password = findViewById(R.id.main_password);
+
+        forgotPassword = findViewById(R.id.main_forgot_password);
+        forgotPassword.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+
+        passwordHide = findViewById(R.id.main_password_hide);
+        passwordShow = findViewById(R.id.main_password_show);
+
+        passwordHide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                password.setTransformationMethod(null);
+                passwordHide.setVisibility(View.GONE);
+                passwordShow.setVisibility(View.VISIBLE);
+            }
+        });
+
+        passwordShow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                password.setTransformationMethod(new PasswordTransformationMethod());
+                passwordHide.setVisibility(View.VISIBLE);
+                passwordShow.setVisibility(View.GONE);
+            }
+        });
 
         //Button
         //TextView
