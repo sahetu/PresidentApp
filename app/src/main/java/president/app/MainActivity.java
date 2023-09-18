@@ -1,5 +1,6 @@
 package president.app;
 
+import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.Editable;
@@ -20,7 +21,7 @@ import com.google.android.material.snackbar.Snackbar;
 public class MainActivity extends AppCompatActivity {
 
     Button login;
-    EditText email,password;
+    public static EditText email,password;
     TextView forgotPassword;
 
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         //Context Type For Class File
         //1. Context
 
-        /*login.setOnClickListener(new View.OnClickListener() {
+        login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(email.getText().toString().trim().equals("")){
@@ -94,24 +95,37 @@ public class MainActivity extends AppCompatActivity {
                     password.setError("Min. 6 Char Password Required");
                 }
                 else {
-                    System.out.println("Login Successfully");
-                    Log.d("PARTH", "Login Successfully");
-                    //Toast.makeText(MainActivity.this,"Login Successfully",Toast.LENGTH_LONG).show();
-                    new CommonMethod(MainActivity.this, "Login Successfully");
-                    //Snackbar.make(view,"Login Successfully",Snackbar.LENGTH_SHORT).show();
-                    new CommonMethod(view, "Login Successfully");
+                    if(email.getText().toString().trim().equals("admin@gmail.com") && password.getText().toString().trim().equalsIgnoreCase("Admin@123")){
+                        System.out.println("Login Successfully");
+                        Log.d("PARTH", "Login Successfully");
+                        //Toast.makeText(MainActivity.this,"Login Successfully",Toast.LENGTH_LONG).show();
+                        new CommonMethod(MainActivity.this, "Login Successfully");
+                        //Snackbar.make(view,"Login Successfully",Snackbar.LENGTH_SHORT).show();
+                        new CommonMethod(view, "Login Successfully");
+                        Intent intent = new Intent(MainActivity.this,HomeActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("PARTH",email.getText().toString());
+                        bundle.putString("NIHAR",password.getText().toString());
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                        //new CommonMethod(MainActivity.this,HomeActivity.class);
+                    }
+                    else{
+                        new CommonMethod(MainActivity.this, "Login Unsuccessfully");
+                        new CommonMethod(view, "Login Unsuccessfully");
+                    }
                 }
             }
-        });*/
+        });
 
-        setButtonData(false);
+        setButtonData(true);
 
-        login.setOnClickListener(new View.OnClickListener() {
+        /*login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new CommonMethod(MainActivity.this,"Clicked Login");
+                new CommonMethod(MainActivity.this,"Login Successfully");
             }
-        });
+        });*/
 
         email.addTextChangedListener(new TextWatcher() {
             @Override
