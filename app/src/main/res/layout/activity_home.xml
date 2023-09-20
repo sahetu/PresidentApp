@@ -54,4 +54,76 @@
 
     </LinearLayout>
 
+    <RadioGroup
+        android:id="@+id/home_gender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/home_male"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Male"
+            app:buttonTint="@android:color/holo_red_light" />
+
+        <RadioButton
+            android:id="@+id/home_female"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Female"
+            app:buttonTint="@android:color/holo_red_light" />
+
+        <RadioButton
+            android:id="@+id/home_other"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Other"
+            app:buttonTint="@android:color/holo_red_light" />
+
+    </RadioGroup>
+
+    <CheckBox
+        android:id="@+id/home_android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Android" />
+
+    <CheckBox
+        android:id="@+id/home_java"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Java" />
+
+    <CheckBox
+        android:id="@+id/home_php"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Php" />
+
+    <CheckBox
+        android:id="@+id/home_flutter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Flutter" />
+
+    <CheckBox
+        android:id="@+id/home_react"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="React Native" />
+
+    <Button
+        android:id="@+id/home_technology"
+        style="@style/button_18"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/main_forgot_password"
+        android:layout_marginHorizontal="@dimen/_70sdp"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:text="Show Technology" />
+
 </LinearLayout>

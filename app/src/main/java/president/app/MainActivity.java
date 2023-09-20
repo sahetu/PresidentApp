@@ -37,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
         email = findViewById(R.id.main_email);
         password = findViewById(R.id.main_password);
 
+        email.setText("admin@gmail.com");
+        password.setText("admin@123");
+
         forgotPassword = findViewById(R.id.main_forgot_password);
         forgotPassword.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
 
