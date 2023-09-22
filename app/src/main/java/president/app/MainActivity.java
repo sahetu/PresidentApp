@@ -20,7 +20,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button login;
+    Button login,signup;
     public static EditText email,password;
     TextView forgotPassword;
 
@@ -32,6 +32,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        signup = findViewById(R.id.main_signup);
+
+        signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new CommonMethod(MainActivity.this, SignupActivity.class);
+            }
+        });
 
         login = findViewById(R.id.main_login);
         email = findViewById(R.id.main_email);
