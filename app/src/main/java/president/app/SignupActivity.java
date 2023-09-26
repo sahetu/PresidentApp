@@ -3,6 +3,7 @@ package president.app;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -32,7 +33,7 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        db = openOrCreateDatabase("President.db",MODE_PRIVATE,null);
+        db = openOrCreateDatabase("President.db", MODE_PRIVATE, null);
         String tableQuery = "CREATE TABLE IF NOT EXISTS USERS(USERID INTEGER PRIMARY KEY AUTOINCREMENT ,NAME VARCHAR(100),EMAIL VARCHAR(100),CONTACT BIGINT(10),PASSWORD VARCHAR(20))";
         db.execSQL(tableQuery);
 
@@ -128,10 +129,16 @@ public class SignupActivity extends AppCompatActivity {
                 } else if (!password.getText().toString().trim().matches(confirmPassword.getText().toString().trim())) {
                     confirmPassword.setError("Password Does Not Match");
                 } else {
-                    String insertQuery = "INSERT INTO USERS VALUES (NULL,'"+name.getText().toString()+"','"+email.getText().toString()+"','"+contact.getText().toString()+"','"+password.getText().toString()+"')";
-                    db.execSQL(insertQuery);
-                    new CommonMethod(SignupActivity.this, "Signup Successfully");
-                    onBackPressed();
+                    String selectQuery = "SELECT * FROM USERS WHERE EMAIL='" + email.getText().toString() + "' OR CONTACT='" + contact.getText().toString() + "' ";
+                    Cursor cursor = db.rawQuery(selectQuery, null);
+                    if (cursor.getCount() > 0) {
+                        new CommonMethod(SignupActivity.this, "Email Id/Contact No. Already Registered");
+                    } else {
+                        String insertQuery = "INSERT INTO USERS VALUES (NULL,'" + name.getText().toString() + "','" + email.getText().toString() + "','" + contact.getText().toString() + "','" + password.getText().toString() + "')";
+                        db.execSQL(insertQuery);
+                        new CommonMethod(SignupActivity.this, "Signup Successfully");
+                        onBackPressed();
+                    }
                 }
             }
         });

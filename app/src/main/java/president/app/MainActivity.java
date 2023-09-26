@@ -1,6 +1,8 @@
 package president.app;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.Editable;
@@ -27,11 +29,16 @@ public class MainActivity extends AppCompatActivity {
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
     ImageView passwordHide,passwordShow;
+    SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        db = openOrCreateDatabase("President.db",MODE_PRIVATE,null);
+        String tableQuery = "CREATE TABLE IF NOT EXISTS USERS(USERID INTEGER PRIMARY KEY AUTOINCREMENT ,NAME VARCHAR(100),EMAIL VARCHAR(100),CONTACT BIGINT(10),PASSWORD VARCHAR(20))";
+        db.execSQL(tableQuery);
 
         signup = findViewById(R.id.main_signup);
 
@@ -46,8 +53,8 @@ public class MainActivity extends AppCompatActivity {
         email = findViewById(R.id.main_email);
         password = findViewById(R.id.main_password);
 
-        email.setText("admin@gmail.com");
-        password.setText("admin@123");
+        //email.setText("admin@gmail.com");
+        //password.setText("admin@123");
 
         forgotPassword = findViewById(R.id.main_forgot_password);
         forgotPassword.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
@@ -107,7 +114,29 @@ public class MainActivity extends AppCompatActivity {
                     password.setError("Min. 6 Char Password Required");
                 }
                 else {
-                    if(email.getText().toString().trim().equals("admin@gmail.com") && password.getText().toString().trim().equalsIgnoreCase("Admin@123")){
+                    String loginQuery = "SELECT * FROM USERS WHERE (EMAIL='"+email.getText().toString()+"' OR CONTACT='"+email.getText().toString()+"') AND PASSWORD='"+password.getText().toString()+"'";
+                    Cursor cursor = db.rawQuery(loginQuery,null);
+                    if(cursor.getCount()>0) {
+                        while (cursor.moveToNext()) {
+                            System.out.println("Login Successfully");
+                            Log.d("PARTH", "Login Successfully");
+                            //Toast.makeText(MainActivity.this,"Login Successfully",Toast.LENGTH_LONG).show();
+                            new CommonMethod(MainActivity.this, "Login Successfully");
+                            //Snackbar.make(view,"Login Successfully",Snackbar.LENGTH_SHORT).show();
+                            new CommonMethod(view, "Login Successfully");
+                            Intent intent = new Intent(MainActivity.this,HomeActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("PARTH",cursor.getString(2));
+                            bundle.putString("NIHAR",cursor.getString(4));
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        }
+                    }
+                    else{
+                        new CommonMethod(MainActivity.this,"Login Unsuccessfully");
+                    }
+
+                    /*if(email.getText().toString().trim().equals("admin@gmail.com") && password.getText().toString().trim().equalsIgnoreCase("Admin@123")){
                         System.out.println("Login Successfully");
                         Log.d("PARTH", "Login Successfully");
                         //Toast.makeText(MainActivity.this,"Login Successfully",Toast.LENGTH_LONG).show();
@@ -125,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
                     else{
                         new CommonMethod(MainActivity.this, "Login Unsuccessfully");
                         new CommonMethod(view, "Login Unsuccessfully");
-                    }
+                    }*/
                 }
             }
         });
