@@ -1,6 +1,7 @@
 package president.app;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Paint;
@@ -30,11 +31,14 @@ public class MainActivity extends AppCompatActivity {
 
     ImageView passwordHide,passwordShow;
     SQLiteDatabase db;
+    SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sp = getSharedPreferences(ConstantSp.PREF,MODE_PRIVATE);
 
         db = openOrCreateDatabase("President.db",MODE_PRIVATE,null);
         String tableQuery = "CREATE TABLE IF NOT EXISTS USERS(USERID INTEGER PRIMARY KEY AUTOINCREMENT ,NAME VARCHAR(100),EMAIL VARCHAR(100),CONTACT BIGINT(10),PASSWORD VARCHAR(20))";
@@ -124,11 +128,17 @@ public class MainActivity extends AppCompatActivity {
                             new CommonMethod(MainActivity.this, "Login Successfully");
                             //Snackbar.make(view,"Login Successfully",Snackbar.LENGTH_SHORT).show();
                             new CommonMethod(view, "Login Successfully");
-                            Intent intent = new Intent(MainActivity.this,HomeActivity.class);
-                            Bundle bundle = new Bundle();
+                            Intent intent = new Intent(MainActivity.this,ProfileActivity.class);
+                            sp.edit().putString(ConstantSp.USERID,cursor.getString(0)).commit();
+                            sp.edit().putString(ConstantSp.NAME,cursor.getString(1)).commit();
+                            sp.edit().putString(ConstantSp.EMAIL,cursor.getString(2)).commit();
+                            sp.edit().putString(ConstantSp.CONTACT,cursor.getString(3)).commit();
+                            sp.edit().putString(ConstantSp.PASSWORD,cursor.getString(4)).commit();
+
+                            /*Bundle bundle = new Bundle();
                             bundle.putString("PARTH",cursor.getString(2));
                             bundle.putString("NIHAR",cursor.getString(4));
-                            intent.putExtras(bundle);
+                            intent.putExtras(bundle);*/
                             startActivity(intent);
                         }
                     }
