@@ -26,7 +26,7 @@
                 style="@style/text_bold_30"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Signup" />
+                android:text="Profile" />
 
             <TextView
                 android:id="@+id/profile_name_title"
@@ -224,6 +224,16 @@
                 android:layout_marginHorizontal="@dimen/_70sdp"
                 android:layout_marginTop="@dimen/_30sdp"
                 android:text="Logout" />
+
+            <Button
+                android:id="@+id/profile_delete"
+                style="@style/button_18"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/profile_logout"
+                android:layout_marginHorizontal="@dimen/_70sdp"
+                android:layout_marginTop="@dimen/_30sdp"
+                android:text="Delete" />
 
         </RelativeLayout>
     </FrameLayout>

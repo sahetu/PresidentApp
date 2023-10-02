@@ -2,6 +2,7 @@ package president.app;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,7 +16,7 @@ import android.widget.LinearLayout;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    Button editProfile,submit,logout;
+    Button editProfile,submit,logout,delete;
     EditText name, email, password, confirmPassword, contact;
     LinearLayout confirmPasswordLayout;
 
@@ -40,7 +41,33 @@ public class ProfileActivity extends AppCompatActivity {
 
         editProfile = findViewById(R.id.profile_edit);
         submit = findViewById(R.id.profile_submit);
+
+        delete = findViewById(R.id.profile_delete);
+
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String deleteQuery = "DELETE FROM USERS WHERE USERID='"+sp.getString(ConstantSp.USERID,"")+"'";
+                db.execSQL(deleteQuery);
+                new CommonMethod(ProfileActivity.this,"Account Deleted Successfully");
+                sp.edit().clear().commit();
+                new CommonMethod(ProfileActivity.this,MainActivity.class);
+                finish();
+            }
+        });
+
         logout = findViewById(R.id.profile_logout);
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //sp.edit().remove(ConstantSp.NAME).commit();
+                sp.edit().clear().commit();
+                new CommonMethod(ProfileActivity.this,MainActivity.class);
+                finish();
+            }
+        });
+
         name = findViewById(R.id.profile_name);
         email = findViewById(R.id.profile_email);
         contact = findViewById(R.id.profile_contact);
@@ -115,6 +142,15 @@ public class ProfileActivity extends AppCompatActivity {
                 } else if (!password.getText().toString().trim().matches(confirmPassword.getText().toString().trim())) {
                     confirmPassword.setError("Password Does Not Match");
                 } else {
+                    String updateQuery = "UPDATE USERS SET NAME='"+name.getText().toString()+"',EMAIL='"+email.getText().toString()+"',CONTACT='"+contact.getText().toString()+"',PASSWORD='"+password.getText().toString()+"' WHERE USERID='"+sp.getString(ConstantSp.USERID,"")+"' ";
+                    db.execSQL(updateQuery);
+                    new CommonMethod(ProfileActivity.this,"Profile Update Successfully");
+
+                    sp.edit().putString(ConstantSp.NAME,name.getText().toString()).commit();
+                    sp.edit().putString(ConstantSp.EMAIL,email.getText().toString()).commit();
+                    sp.edit().putString(ConstantSp.CONTACT,contact.getText().toString()).commit();
+                    sp.edit().putString(ConstantSp.PASSWORD,password.getText().toString()).commit();
+
                     setData(false);
                     /*String selectQuery = "SELECT * FROM USERS WHERE EMAIL='" + email.getText().toString() + "' OR CONTACT='" + contact.getText().toString() + "' ";
                     Cursor cursor = db.rawQuery(selectQuery, null);
@@ -146,6 +182,7 @@ public class ProfileActivity extends AppCompatActivity {
         email.setText(sp.getString(ConstantSp.EMAIL,""));
         contact.setText(sp.getString(ConstantSp.CONTACT,""));
         password.setText(sp.getString(ConstantSp.PASSWORD,""));
+        confirmPassword.setText(sp.getString(ConstantSp.PASSWORD,""));
 
         name.setEnabled(b);
         email.setEnabled(b);
