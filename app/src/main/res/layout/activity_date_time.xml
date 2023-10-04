@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@drawable/background"
+    android:layout_height="match_parent"
+    tools:context=".DateTimeActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black1" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/date_time_datepicker"
+            android:drawableRight="@drawable/ic_calendar"
+            android:editable="false"
+            android:hint="Select Date"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            style="@style/edit_18"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/date_time_timepicker"
+            android:drawableRight="@drawable/ic_clock"
+            android:editable="false"
+            android:hint="Select Time"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            style="@style/edit_18"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+</FrameLayout>
