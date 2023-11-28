@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".SpinnerListActivity">
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_10sdp"
+        android:background="@color/bg1"
+        android:popupBackground="@color/bg3" />
+
+    <!--<ListView
+        android:dividerHeight="@dimen/_1sdp"
+        android:divider="@color/bg3"
+        android:id="@+id/spinner_listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>-->
+
+    <AutoCompleteTextView
+        android:id="@+id/spinner_autocomplete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_10sdp"
+        android:hint="Search Technology" />
+
+    <MultiAutoCompleteTextView
+        android:id="@+id/spinner_multiautocomplete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_10sdp"
+        android:hint="Search Multiple Technology" />
+
+    <GridView
+        android:id="@+id/spinner_gridview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="auto_fit" />
+
+</LinearLayout>

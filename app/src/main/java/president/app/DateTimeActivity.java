@@ -46,6 +46,7 @@ public class DateTimeActivity extends AppCompatActivity {
                     sAMPM = "PM";
                 }
                 else if(i>12){
+                    //iHour = iHour-12;
                     iHour -=12;
                     sAMPM = "PM";
                 }
