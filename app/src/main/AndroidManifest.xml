@@ -15,7 +15,7 @@
         android:theme="@style/Theme.PresidentApp"
         tools:targetApi="31">
         <activity
-            android:name=".SpinnerListActivity"
+            android:name=".CustomListActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,12 +24,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".DateTimeActivity"
+            android:name=".SpinnerListActivity"
             android:exported="true">
         </activity>
         <activity
-            android:name=".SplashActivity"
+            android:name=".DateTimeActivity"
             android:exported="true"></activity>
+        <activity
+            android:name=".SplashActivity"
+            android:exported="true" />
         <activity
             android:name=".ProfileActivity"
             android:exported="false" />
