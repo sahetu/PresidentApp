@@ -3,11 +3,11 @@ package president.app;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
-public class CustomListActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class CustomListSecondActivity extends AppCompatActivity {
 
     ListView listView;
 
@@ -27,14 +27,25 @@ public class CustomListActivity extends AppCompatActivity {
             "Watermelon is grown in favorable climates from tropical to temperate regions worldwide for its large edible fruit, which is a berry with a hard rind and no internal divisions, and is botanically called a pepo. The sweet, juicy flesh is usually deep red to pink, with many black seeds, although seedless varieties exist."
     };
 
+    ArrayList<CustomSecondList> arrayList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_custom_list);
+        setContentView(R.layout.activity_custom_list_second);
 
-        listView = findViewById(R.id.custom_list);
+        listView = findViewById(R.id.custom_list_second);
 
-        CustomListAdapter adapter = new CustomListAdapter(CustomListActivity.this,nameArray,imageArray,descArray);
+        arrayList = new ArrayList<>();
+        for(int i=0;i<nameArray.length;i++){
+            CustomSecondList list = new CustomSecondList();
+            list.setName(nameArray[i]);
+            list.setImage(imageArray[i]);
+            list.setDescription(descArray[i]);
+            arrayList.add(list);
+        }
+
+        CustomListSecondAdapter adapter = new CustomListSecondAdapter(CustomListSecondActivity.this,arrayList);
         listView.setAdapter(adapter);
 
         /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -43,6 +54,5 @@ public class CustomListActivity extends AppCompatActivity {
                 new CommonMethod(CustomListActivity.this,nameArray[i]);
             }
         });*/
-
     }
 }

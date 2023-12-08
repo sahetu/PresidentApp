@@ -9,4 +9,8 @@ public class ConstantSp {
     public static String CONTACT = "contact";
     public static String PASSWORD = "password";
 
+    public static String PRODUCT_NAME = "product_name";
+    public static String PRODUCT_IMAGE = "product_image";
+    public static String PRODUCT_DESC = "product_desc";
+
 }

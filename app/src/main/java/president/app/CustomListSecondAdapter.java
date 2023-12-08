@@ -11,30 +11,28 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-public class CustomListAdapter extends BaseAdapter {
+import java.util.ArrayList;
+
+public class CustomListSecondAdapter  extends BaseAdapter {
 
     Context context;
-    String[] nameArray;
-    String[] imageArray;
-    String[] descArray;
+    ArrayList<CustomSecondList> arrayList;
     SharedPreferences sp;
 
-    public CustomListAdapter(Context context, String[] nameArray, String[] imageArray, String[] descArray) {
+    public CustomListSecondAdapter(Context context, ArrayList<CustomSecondList> arrayList) {
         this.context = context;
-        this.nameArray = nameArray;
-        this.imageArray = imageArray;
-        this.descArray = descArray;
+        this.arrayList = arrayList;
         sp = context.getSharedPreferences(ConstantSp.PREF,Context.MODE_PRIVATE);
     }
 
     @Override
     public int getCount() {
-        return nameArray.length;
+        return arrayList.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return nameArray[i];
+        return arrayList.get(i);
     }
 
     @Override
@@ -50,17 +48,17 @@ public class CustomListAdapter extends BaseAdapter {
         ImageView image = view.findViewById(R.id.item_list_image);
         TextView name = view.findViewById(R.id.item_list_name);
 
-        name.setText(nameArray[i]);
+        name.setText(arrayList.get(i).getName());
         //image.setImageResource(imageArray[i]);
-        Glide.with(context).load(imageArray[i]).placeholder(R.mipmap.ic_launcher).into(image);
+        Glide.with(context).load(arrayList.get(i).getImage()).placeholder(R.mipmap.ic_launcher).into(image);
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //new CommonMethod(context,nameArray[i]);
-                sp.edit().putString(ConstantSp.PRODUCT_NAME,nameArray[i]).commit();
-                sp.edit().putString(ConstantSp.PRODUCT_IMAGE,imageArray[i]).commit();
-                sp.edit().putString(ConstantSp.PRODUCT_DESC,descArray[i]).commit();
+                sp.edit().putString(ConstantSp.PRODUCT_NAME,arrayList.get(i).getName()).commit();
+                sp.edit().putString(ConstantSp.PRODUCT_IMAGE,arrayList.get(i).getImage()).commit();
+                sp.edit().putString(ConstantSp.PRODUCT_DESC,arrayList.get(i).getDescription()).commit();
                 new CommonMethod(context, ProductDetailActivity.class);
             }
         });
@@ -68,7 +66,7 @@ public class CustomListAdapter extends BaseAdapter {
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new CommonMethod(context,"Image Clicked : "+nameArray[i]);
+                new CommonMethod(context,"Image Clicked : "+arrayList.get(i).getName());
             }
         });
 
