@@ -15,8 +15,8 @@
         android:theme="@style/Theme.PresidentApp"
         tools:targetApi="31">
         <activity
-            android:name=".CustomListSecondActivity"
-            android:exported="true">
+            android:name=".TabDemoActivity"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,16 +24,40 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ProductDetailActivity"
-            android:exported="false" />
-        <activity
-            android:name=".CustomListActivity"
+            android:name=".RecyclerviewDemoActivity"
             android:exported="true">
             <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>-->
+        </activity>
+        <activity
+            android:name=".CustomListSecondActivity"
+            android:exported="false">
+
+            <!--
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            -->
+        </activity>
+        <activity
+            android:name=".ProductDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CustomListActivity"
+            android:exported="true">
+
+            <!--
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            -->
         </activity>
         <activity
             android:name=".SpinnerListActivity"
