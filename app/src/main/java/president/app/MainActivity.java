@@ -21,9 +21,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import president.app.databinding.ActivityMainBinding;
+import president.app.databinding.ActivityNavDemoBinding;
+
 public class MainActivity extends AppCompatActivity {
 
-    Button login,signup;
+    Button login; //,signup
     public static EditText email,password;
     TextView forgotPassword;
 
@@ -32,11 +35,13 @@ public class MainActivity extends AppCompatActivity {
     ImageView passwordHide,passwordShow;
     SQLiteDatabase db;
     SharedPreferences sp;
+    ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         sp = getSharedPreferences(ConstantSp.PREF,MODE_PRIVATE);
 
@@ -44,9 +49,9 @@ public class MainActivity extends AppCompatActivity {
         String tableQuery = "CREATE TABLE IF NOT EXISTS USERS(USERID INTEGER PRIMARY KEY AUTOINCREMENT ,NAME VARCHAR(100),EMAIL VARCHAR(100),CONTACT BIGINT(10),PASSWORD VARCHAR(20))";
         db.execSQL(tableQuery);
 
-        signup = findViewById(R.id.main_signup);
+        //signup = findViewById(R.id.main_signup);
 
-        signup.setOnClickListener(new View.OnClickListener() {
+        binding.mainSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new CommonMethod(MainActivity.this, SignupActivity.class);
