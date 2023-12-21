@@ -2,10 +2,12 @@ package president.app;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Paint;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,6 +18,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -129,7 +136,14 @@ public class SignupActivity extends AppCompatActivity {
                 } else if (!password.getText().toString().trim().matches(confirmPassword.getText().toString().trim())) {
                     confirmPassword.setError("Password Does Not Match");
                 } else {
-                    String selectQuery = "SELECT * FROM USERS WHERE EMAIL='" + email.getText().toString() + "' OR CONTACT='" + contact.getText().toString() + "' ";
+                    if(new ConnectionDetector(SignupActivity.this).networkConnected()){
+                        new DoSignup().execute();
+                    }
+                    else{
+                        new ConnectionDetector(SignupActivity.this).networkDisconnected();
+                    }
+
+                    /*String selectQuery = "SELECT * FROM USERS WHERE EMAIL='" + email.getText().toString() + "' OR CONTACT='" + contact.getText().toString() + "' ";
                     Cursor cursor = db.rawQuery(selectQuery, null);
                     if (cursor.getCount() > 0) {
                         new CommonMethod(SignupActivity.this, "Email Id/Contact No. Already Registered");
@@ -138,9 +152,51 @@ public class SignupActivity extends AppCompatActivity {
                         db.execSQL(insertQuery);
                         new CommonMethod(SignupActivity.this, "Signup Successfully");
                         onBackPressed();
-                    }
+                    }*/
                 }
             }
         });
+    }
+
+    private class DoSignup extends AsyncTask<String,String,String> {
+
+        ProgressDialog pd;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(SignupActivity.this);
+            pd.setMessage("Please Wait...");
+            pd.setCancelable(false);
+            pd.show();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            HashMap<String,String> hashMap = new HashMap<>();
+            hashMap.put("name",name.getText().toString());
+            hashMap.put("email",email.getText().toString());
+            hashMap.put("contact",contact.getText().toString());
+            hashMap.put("password",password.getText().toString());
+            return new MakeServiceCall().MakeServiceCall(ConstantSp.BASE_URL+"signup.php",MakeServiceCall.POST,hashMap);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            pd.dismiss();
+            try {
+                JSONObject object = new JSONObject(s);
+                if(object.getBoolean("status")){
+                    new CommonMethod(SignupActivity.this,object.getString("message"));
+                    onBackPressed();
+                }
+                else{
+                    new CommonMethod(SignupActivity.this,object.getString("message"));
+                }
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }
