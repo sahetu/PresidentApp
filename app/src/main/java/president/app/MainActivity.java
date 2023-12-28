@@ -1,10 +1,12 @@
 package president.app;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Paint;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,6 +22,12 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 
 import president.app.databinding.ActivityMainBinding;
 import president.app.databinding.ActivityNavDemoBinding;
@@ -123,7 +131,13 @@ public class MainActivity extends AppCompatActivity {
                     password.setError("Min. 6 Char Password Required");
                 }
                 else {
-                    String loginQuery = "SELECT * FROM USERS WHERE (EMAIL='"+email.getText().toString()+"' OR CONTACT='"+email.getText().toString()+"') AND PASSWORD='"+password.getText().toString()+"'";
+                    if(new ConnectionDetector(MainActivity.this).networkConnected()){
+                        new DoLogin().execute();
+                    }
+                    else{
+                        new ConnectionDetector(MainActivity.this).networkDisconnected();
+                    }
+                    /*String loginQuery = "SELECT * FROM USERS WHERE (EMAIL='"+email.getText().toString()+"' OR CONTACT='"+email.getText().toString()+"') AND PASSWORD='"+password.getText().toString()+"'";
                     Cursor cursor = db.rawQuery(loginQuery,null);
                     if(cursor.getCount()>0) {
                         while (cursor.moveToNext()) {
@@ -140,16 +154,16 @@ public class MainActivity extends AppCompatActivity {
                             sp.edit().putString(ConstantSp.CONTACT,cursor.getString(3)).commit();
                             sp.edit().putString(ConstantSp.PASSWORD,cursor.getString(4)).commit();
 
-                            /*Bundle bundle = new Bundle();
+                            *//*Bundle bundle = new Bundle();
                             bundle.putString("PARTH",cursor.getString(2));
                             bundle.putString("NIHAR",cursor.getString(4));
-                            intent.putExtras(bundle);*/
+                            intent.putExtras(bundle);*//*
                             startActivity(intent);
                         }
                     }
                     else{
                         new CommonMethod(MainActivity.this,"Login Unsuccessfully");
-                    }
+                    }*/
 
                     /*if(email.getText().toString().trim().equals("admin@gmail.com") && password.getText().toString().trim().equalsIgnoreCase("Admin@123")){
                         System.out.println("Login Successfully");
@@ -256,4 +270,55 @@ public class MainActivity extends AppCompatActivity {
         }
         //login.setEnabled(b);
     }
+
+    private class DoLogin extends AsyncTask<String,String,String> {
+
+        ProgressDialog pd;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(MainActivity.this);
+            pd.setMessage("Please Wait...");
+            pd.setCancelable(false);
+            pd.show();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            HashMap<String,String> hashMap = new HashMap<>();
+            hashMap.put("email",email.getText().toString());
+            hashMap.put("password",password.getText().toString());
+            return new MakeServiceCall().MakeServiceCall(ConstantSp.BASE_URL+"login.php",MakeServiceCall.POST,hashMap);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            pd.dismiss();
+            try {
+                JSONObject object = new JSONObject(s);
+                if(object.getBoolean("status")){
+                    new CommonMethod(MainActivity.this,object.getString("message"));
+
+                    JSONArray jsonArray = object.getJSONArray("UserData");
+                    for(int i=0;i<jsonArray.length();i++){
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        sp.edit().putString(ConstantSp.USERID,jsonObject.getString("userId")).commit();
+                        sp.edit().putString(ConstantSp.NAME,jsonObject.getString("name")).commit();
+                        sp.edit().putString(ConstantSp.EMAIL,jsonObject.getString("email")).commit();
+                        sp.edit().putString(ConstantSp.CONTACT,jsonObject.getString("contact")).commit();
+                        sp.edit().putString(ConstantSp.PASSWORD,jsonObject.getString("password")).commit();
+                        new CommonMethod(MainActivity.this, ProfileActivity.class);
+                    }
+                }
+                else{
+                    new CommonMethod(MainActivity.this,object.getString("message"));
+                }
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
 }
