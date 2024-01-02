@@ -1,23 +1,17 @@
 package president.app;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -136,13 +130,6 @@ public class SignupActivity extends AppCompatActivity {
                 } else if (!password.getText().toString().trim().matches(confirmPassword.getText().toString().trim())) {
                     confirmPassword.setError("Password Does Not Match");
                 } else {
-                    if(new ConnectionDetector(SignupActivity.this).networkConnected()){
-                        new DoSignup().execute();
-                    }
-                    else{
-                        new ConnectionDetector(SignupActivity.this).networkDisconnected();
-                    }
-
                     /*String selectQuery = "SELECT * FROM USERS WHERE EMAIL='" + email.getText().toString() + "' OR CONTACT='" + contact.getText().toString() + "' ";
                     Cursor cursor = db.rawQuery(selectQuery, null);
                     if (cursor.getCount() > 0) {
@@ -153,12 +140,18 @@ public class SignupActivity extends AppCompatActivity {
                         new CommonMethod(SignupActivity.this, "Signup Successfully");
                         onBackPressed();
                     }*/
+                    if(new ConnectionDetector(SignupActivity.this).networkConnected()){
+                        new doSignup().execute();
+                    }
+                    else{
+                        new ConnectionDetector(SignupActivity.this).networkDisconnected();
+                    }
                 }
             }
         });
     }
 
-    private class DoSignup extends AsyncTask<String,String,String> {
+    private class doSignup extends AsyncTask<String,String,String> {
 
         ProgressDialog pd;
 
@@ -175,9 +168,9 @@ public class SignupActivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             HashMap<String,String> hashMap = new HashMap<>();
             hashMap.put("name",name.getText().toString());
-            hashMap.put("email",email.getText().toString());
-            hashMap.put("contact",contact.getText().toString());
             hashMap.put("password",password.getText().toString());
+            hashMap.put("contact",contact.getText().toString());
+            hashMap.put("email",email.getText().toString());
             return new MakeServiceCall().MakeServiceCall(ConstantSp.BASE_URL+"signup.php",MakeServiceCall.POST,hashMap);
         }
 
@@ -186,13 +179,13 @@ public class SignupActivity extends AppCompatActivity {
             super.onPostExecute(s);
             pd.dismiss();
             try {
-                JSONObject object = new JSONObject(s);
-                if(object.getBoolean("status")){
-                    new CommonMethod(SignupActivity.this,object.getString("message"));
+                JSONObject jsonObject = new JSONObject(s);
+                if(jsonObject.getBoolean("status")==true){
+                    new CommonMethod(SignupActivity.this,jsonObject.getString("message"));
                     onBackPressed();
                 }
                 else{
-                    new CommonMethod(SignupActivity.this,object.getString("message"));
+                    new CommonMethod(SignupActivity.this,jsonObject.getString("message"));
                 }
             } catch (JSONException e) {
                 throw new RuntimeException(e);

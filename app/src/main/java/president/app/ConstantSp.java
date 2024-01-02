@@ -2,7 +2,7 @@ package president.app;
 
 public class ConstantSp {
 
-    public static String BASE_URL = "https://keyursavaliya.000webhostapp.com/Flutter_New/";
+    public static String BASE_URL = "https://parthudhani.000webhostapp.com/api/";
     public static String PREF = "p";
     public static String USERID = "userid";
     public static String NAME = "name";
