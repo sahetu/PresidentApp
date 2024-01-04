@@ -154,10 +154,10 @@ public class MainActivity extends AppCompatActivity {
                             sp.edit().putString(ConstantSp.CONTACT,cursor.getString(3)).commit();
                             sp.edit().putString(ConstantSp.PASSWORD,cursor.getString(4)).commit();
 
-                            *//*Bundle bundle = new Bundle();
+                            Bundle bundle = new Bundle();
                             bundle.putString("PARTH",cursor.getString(2));
                             bundle.putString("NIHAR",cursor.getString(4));
-                            intent.putExtras(bundle);*//*
+                            intent.putExtras(bundle);
                             startActivity(intent);
                         }
                     }
@@ -298,18 +298,24 @@ public class MainActivity extends AppCompatActivity {
             pd.dismiss();
             try {
                 JSONObject object = new JSONObject(s);
-                if(object.getBoolean("status")){
+                if(object.getBoolean("status")==true){
                     new CommonMethod(MainActivity.this,object.getString("message"));
 
                     JSONArray jsonArray = object.getJSONArray("UserData");
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        Intent intent = new Intent(MainActivity.this,ProfileActivity.class);
                         sp.edit().putString(ConstantSp.USERID,jsonObject.getString("userId")).commit();
-                        sp.edit().putString(ConstantSp.NAME,jsonObject.getString("name")).commit();
-                        sp.edit().putString(ConstantSp.EMAIL,jsonObject.getString("email")).commit();
-                        sp.edit().putString(ConstantSp.CONTACT,jsonObject.getString("contact")).commit();
-                        sp.edit().putString(ConstantSp.PASSWORD,jsonObject.getString("password")).commit();
-                        new CommonMethod(MainActivity.this, ProfileActivity.class);
+                        sp.edit().putString(ConstantSp.NAME,jsonObject.getString("userName")).commit();
+                        sp.edit().putString(ConstantSp.EMAIL,jsonObject.getString("userEmail")).commit();
+                        sp.edit().putString(ConstantSp.CONTACT,jsonObject.getString("userContact")).commit();
+                        sp.edit().putString(ConstantSp.PASSWORD,password.getText().toString()).commit();
+
+                    /*Bundle bundle = new Bundle();
+                    bundle.putString("PARTH",cursor.getString(2));
+                    bundle.putString("NIHAR",cursor.getString(4));
+                    intent.putExtras(bundle);*/
+                        startActivity(intent);
                     }
                 }
                 else{
@@ -320,5 +326,4 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
 }

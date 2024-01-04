@@ -2,10 +2,12 @@ package president.app;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -13,6 +15,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -47,12 +54,18 @@ public class ProfileActivity extends AppCompatActivity {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String deleteQuery = "DELETE FROM USERS WHERE USERID='"+sp.getString(ConstantSp.USERID,"")+"'";
+                /*String deleteQuery = "DELETE FROM USERS WHERE USERID='"+sp.getString(ConstantSp.USERID,"")+"'";
                 db.execSQL(deleteQuery);
                 new CommonMethod(ProfileActivity.this,"Account Deleted Successfully");
                 sp.edit().clear().commit();
                 new CommonMethod(ProfileActivity.this,MainActivity.class);
-                finish();
+                finish();*/
+                if(new ConnectionDetector(ProfileActivity.this).networkConnected()){
+                    new DoDelete().execute();
+                }
+                else{
+                    new ConnectionDetector(ProfileActivity.this).networkDisconnected();
+                }
             }
         });
 
@@ -142,7 +155,13 @@ public class ProfileActivity extends AppCompatActivity {
                 } else if (!password.getText().toString().trim().matches(confirmPassword.getText().toString().trim())) {
                     confirmPassword.setError("Password Does Not Match");
                 } else {
-                    String updateQuery = "UPDATE USERS SET NAME='"+name.getText().toString()+"',EMAIL='"+email.getText().toString()+"',CONTACT='"+contact.getText().toString()+"',PASSWORD='"+password.getText().toString()+"' WHERE USERID='"+sp.getString(ConstantSp.USERID,"")+"' ";
+                    if(new ConnectionDetector(ProfileActivity.this).networkConnected()){
+                        new DoUpdate().execute();
+                    }
+                    else{
+                        new ConnectionDetector(ProfileActivity.this).networkDisconnected();
+                    }
+                    /*String updateQuery = "UPDATE USERS SET NAME='"+name.getText().toString()+"',EMAIL='"+email.getText().toString()+"',CONTACT='"+contact.getText().toString()+"',PASSWORD='"+password.getText().toString()+"' WHERE USERID='"+sp.getString(ConstantSp.USERID,"")+"' ";
                     db.execSQL(updateQuery);
                     new CommonMethod(ProfileActivity.this,"Profile Update Successfully");
 
@@ -151,7 +170,8 @@ public class ProfileActivity extends AppCompatActivity {
                     sp.edit().putString(ConstantSp.CONTACT,contact.getText().toString()).commit();
                     sp.edit().putString(ConstantSp.PASSWORD,password.getText().toString()).commit();
 
-                    setData(false);
+                    setData(false);*/
+
                     /*String selectQuery = "SELECT * FROM USERS WHERE EMAIL='" + email.getText().toString() + "' OR CONTACT='" + contact.getText().toString() + "' ";
                     Cursor cursor = db.rawQuery(selectQuery, null);
                     if (cursor.getCount() > 0) {
@@ -213,4 +233,94 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
     }
+
+    private class DoUpdate extends AsyncTask<String,String,String> {
+
+        ProgressDialog pd;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(ProfileActivity.this);
+            pd.setMessage("Please Wait...");
+            pd.setCancelable(false);
+            pd.show();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            HashMap<String,String> hashMap = new HashMap<>();
+            hashMap.put("id",sp.getString(ConstantSp.USERID,""));
+            hashMap.put("name",name.getText().toString());
+            hashMap.put("email",email.getText().toString());
+            hashMap.put("contact",contact.getText().toString());
+            hashMap.put("password",password.getText().toString());
+            return new MakeServiceCall().MakeServiceCall(ConstantSp.BASE_URL+"updateProfile.php",MakeServiceCall.POST,hashMap);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            pd.dismiss();
+            try {
+                JSONObject jsonObject = new JSONObject(s);
+                if(jsonObject.getBoolean("status")==true){
+                    new CommonMethod(ProfileActivity.this,jsonObject.getString("message"));
+                    sp.edit().putString(ConstantSp.NAME,name.getText().toString()).commit();
+                    sp.edit().putString(ConstantSp.EMAIL,email.getText().toString()).commit();
+                    sp.edit().putString(ConstantSp.CONTACT,contact.getText().toString()).commit();
+                    sp.edit().putString(ConstantSp.PASSWORD,password.getText().toString()).commit();
+
+                    setData(false);
+                }
+                else{
+                    new CommonMethod(ProfileActivity.this,jsonObject.getString("message"));
+                }
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private class DoDelete extends AsyncTask<String,String,String> {
+
+        ProgressDialog pd;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(ProfileActivity.this);
+            pd.setMessage("Please Wait...");
+            pd.setCancelable(false);
+            pd.show();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            HashMap<String,String> hashMap = new HashMap<>();
+            hashMap.put("id",sp.getString(ConstantSp.USERID,""));
+            return new MakeServiceCall().MakeServiceCall(ConstantSp.BASE_URL+"deleteProfile.php",MakeServiceCall.POST,hashMap);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            pd.dismiss();
+            try {
+                JSONObject jsonObject = new JSONObject(s);
+                if(jsonObject.getBoolean("status")==true){
+                    new CommonMethod(ProfileActivity.this,jsonObject.getString("message"));
+                    sp.edit().clear().commit();
+                    new CommonMethod(ProfileActivity.this,MainActivity.class);
+                    finish();
+                }
+                else{
+                    new CommonMethod(ProfileActivity.this,jsonObject.getString("message"));
+                }
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
 }
