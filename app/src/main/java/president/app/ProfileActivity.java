@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,6 +21,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -34,11 +39,15 @@ public class ProfileActivity extends AppCompatActivity {
     SQLiteDatabase db;
 
     SharedPreferences sp;
+    ApiInterface apiInterface;
+    ProgressDialog pd;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        apiInterface = ApiClient.getClient().create(ApiInterface.class);
 
         sp = getSharedPreferences(ConstantSp.PREF,MODE_PRIVATE);
 
@@ -61,7 +70,12 @@ public class ProfileActivity extends AppCompatActivity {
                 new CommonMethod(ProfileActivity.this,MainActivity.class);
                 finish();*/
                 if(new ConnectionDetector(ProfileActivity.this).networkConnected()){
-                    new DoDelete().execute();
+                    //new DoDelete().execute();
+                    pd = new ProgressDialog(ProfileActivity.this);
+                    pd.setMessage("Please Wait...");
+                    pd.setCancelable(false);
+                    pd.show();
+                    doDeleteData();
                 }
                 else{
                     new ConnectionDetector(ProfileActivity.this).networkDisconnected();
@@ -156,7 +170,12 @@ public class ProfileActivity extends AppCompatActivity {
                     confirmPassword.setError("Password Does Not Match");
                 } else {
                     if(new ConnectionDetector(ProfileActivity.this).networkConnected()){
-                        new DoUpdate().execute();
+                        //new DoUpdate().execute();
+                        pd = new ProgressDialog(ProfileActivity.this);
+                        pd.setMessage("Please Wait...");
+                        pd.setCancelable(false);
+                        pd.show();
+                        doUpdateData();
                     }
                     else{
                         new ConnectionDetector(ProfileActivity.this).networkDisconnected();
@@ -195,6 +214,71 @@ public class ProfileActivity extends AppCompatActivity {
 
         setData(false);
 
+    }
+
+    private void doUpdateData() {
+        Call<GetSignupData> call = apiInterface.updateProfileData(sp.getString(ConstantSp.USERID,""),name.getText().toString(),contact.getText().toString(),email.getText().toString(),password.getText().toString());
+        call.enqueue(new Callback<GetSignupData>() {
+            @Override
+            public void onResponse(Call<GetSignupData> call, Response<GetSignupData> response) {
+                pd.dismiss();
+                if(response.code()==200){
+                    if(response.body().status==true){
+                        new CommonMethod(ProfileActivity.this,response.body().message);
+                        sp.edit().putString(ConstantSp.NAME,name.getText().toString()).commit();
+                        sp.edit().putString(ConstantSp.EMAIL,email.getText().toString()).commit();
+                        sp.edit().putString(ConstantSp.CONTACT,contact.getText().toString()).commit();
+                        sp.edit().putString(ConstantSp.PASSWORD,password.getText().toString()).commit();
+
+                        setData(false);
+                    }
+                    else{
+                        new CommonMethod(ProfileActivity.this,response.body().message);
+                    }
+                }
+                else{
+                    new CommonMethod(ProfileActivity.this,"Server Error Code : "+response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetSignupData> call, Throwable t) {
+                pd.dismiss();
+                Log.d("RESPONSE",t.getMessage());
+                new CommonMethod(ProfileActivity.this,t.getMessage());
+            }
+        });
+    }
+
+    private void doDeleteData() {
+        Call<GetSignupData> call = apiInterface.deleteProfileData(sp.getString(ConstantSp.USERID,""));
+        call.enqueue(new Callback<GetSignupData>() {
+            @Override
+            public void onResponse(Call<GetSignupData> call, Response<GetSignupData> response) {
+                pd.dismiss();
+                if(response.code()==200){
+                    if(response.body().status==true){
+                        new CommonMethod(ProfileActivity.this,response.body().message);
+                        sp.edit().clear().commit();
+                        new CommonMethod(ProfileActivity.this,MainActivity.class);
+                        finish();
+                    }
+                    else{
+                        new CommonMethod(ProfileActivity.this,response.body().message);
+                    }
+                }
+                else{
+                    new CommonMethod(ProfileActivity.this,"Server Error Code : "+response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetSignupData> call, Throwable t) {
+                pd.dismiss();
+                Log.d("RESPONSE",t.getMessage());
+                new CommonMethod(ProfileActivity.this,t.getMessage());
+            }
+        });
     }
 
     private void setData(boolean b) {

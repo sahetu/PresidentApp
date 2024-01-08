@@ -31,6 +31,9 @@ import java.util.HashMap;
 
 import president.app.databinding.ActivityMainBinding;
 import president.app.databinding.ActivityNavDemoBinding;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,12 +47,16 @@ public class MainActivity extends AppCompatActivity {
     SQLiteDatabase db;
     SharedPreferences sp;
     ActivityMainBinding binding;
+    ApiInterface apiInterface;
+    ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        apiInterface = ApiClient.getClient().create(ApiInterface.class);
 
         sp = getSharedPreferences(ConstantSp.PREF,MODE_PRIVATE);
 
@@ -132,7 +139,12 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else {
                     if(new ConnectionDetector(MainActivity.this).networkConnected()){
-                        new DoLogin().execute();
+                        //new DoLogin().execute();
+                        pd = new ProgressDialog(MainActivity.this);
+                        pd.setMessage("Please Wait...");
+                        pd.setCancelable(false);
+                        pd.show();
+                        doRetrofitLogin();
                     }
                     else{
                         new ConnectionDetector(MainActivity.this).networkDisconnected();
@@ -259,6 +271,44 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void doRetrofitLogin() {
+        Call<GetLoginData> call = apiInterface.getLoginData(email.getText().toString(),password.getText().toString());
+        call.enqueue(new Callback<GetLoginData>() {
+            @Override
+            public void onResponse(Call<GetLoginData> call, Response<GetLoginData> response) {
+                pd.dismiss();
+                if(response.code()==200){
+                    if(response.body().status==true){
+                        new CommonMethod(MainActivity.this,response.body().message);
+                        for(int i=0;i<response.body().userData.size();i++){
+                            Intent intent = new Intent(MainActivity.this,ProfileActivity.class);
+                            sp.edit().putString(ConstantSp.USERID,response.body().userData.get(i).userId).commit();
+                            sp.edit().putString(ConstantSp.NAME,response.body().userData.get(i).userName).commit();
+                            sp.edit().putString(ConstantSp.EMAIL,response.body().userData.get(i).userEmail).commit();
+                            sp.edit().putString(ConstantSp.CONTACT,response.body().userData.get(i).userContact).commit();
+                            sp.edit().putString(ConstantSp.PASSWORD,password.getText().toString()).commit();
+
+                            startActivity(intent);
+                        }
+                    }
+                    else{
+                        new CommonMethod(MainActivity.this,response.body().message);
+                    }
+                }
+                else{
+                    new CommonMethod(MainActivity.this,"Server Error Code : "+response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetLoginData> call, Throwable t) {
+                pd.dismiss();
+                Log.d("RESPONSE",t.getMessage());
+                new CommonMethod(MainActivity.this,t.getMessage());
+            }
+        });
     }
 
     private void setButtonData(boolean b) {
