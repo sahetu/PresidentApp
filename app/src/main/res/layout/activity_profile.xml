@@ -28,13 +28,22 @@
                 android:layout_height="wrap_content"
                 android:text="Profile" />
 
+            <ImageView
+                android:id="@+id/profile_image"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_100sdp"
+                android:layout_below="@id/profile_title"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:src="@drawable/ic_menu_gallery" />
+
             <TextView
                 android:id="@+id/profile_name_title"
                 style="@style/text_20"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/profile_title"
-                android:layout_marginTop="@dimen/_50sdp"
+                android:layout_below="@id/profile_image"
+                android:layout_marginTop="@dimen/_20sdp"
                 android:text="Name" />
 
             <EditText
@@ -205,7 +214,6 @@
                 android:text="Edit Profile" />
 
             <Button
-                android:visibility="gone"
                 android:id="@+id/profile_submit"
                 style="@style/button_18"
                 android:layout_width="match_parent"
@@ -213,7 +221,8 @@
                 android:layout_below="@id/profile_edit"
                 android:layout_marginHorizontal="@dimen/_70sdp"
                 android:layout_marginTop="@dimen/_30sdp"
-                android:text="Submit" />
+                android:text="Submit"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/profile_logout"

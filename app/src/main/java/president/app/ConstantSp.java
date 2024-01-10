@@ -9,6 +9,7 @@ public class ConstantSp {
     public static String EMAIL = "email";
     public static String CONTACT = "contact";
     public static String PASSWORD = "password";
+    public static String IMAGE = "image";
 
     public static String PRODUCT_NAME = "product_name";
     public static String PRODUCT_IMAGE = "product_image";

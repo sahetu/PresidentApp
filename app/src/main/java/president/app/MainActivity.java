@@ -30,7 +30,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 import president.app.databinding.ActivityMainBinding;
-import president.app.databinding.ActivityNavDemoBinding;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -289,7 +288,7 @@ public class MainActivity extends AppCompatActivity {
                             sp.edit().putString(ConstantSp.EMAIL,response.body().userData.get(i).userEmail).commit();
                             sp.edit().putString(ConstantSp.CONTACT,response.body().userData.get(i).userContact).commit();
                             sp.edit().putString(ConstantSp.PASSWORD,password.getText().toString()).commit();
-
+                            sp.edit().putString(ConstantSp.IMAGE,response.body().userData.get(i).image).commit();
                             startActivity(intent);
                         }
                     }
